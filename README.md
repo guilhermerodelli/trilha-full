@@ -22,3 +22,11 @@ Praticar versionamento, organização e fluxo de trabalho profissional com Git.
 
 
 
+\## Tecnologias
+
+\- Git
+
+\- GitHub
+
+
+
