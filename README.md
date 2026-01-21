@@ -1,32 +1,17 @@
-\# Git Base Project
+# Trilha Full Stack
 
+## Fase 1 — Git e Fundamentos ✅
+- Estrutura inicial do projeto
+- Organização de pastas
+- Versionamento com Git
+- Publicação no GitHub
 
+## Fase 2 — Backend Essencial ✅
+Mini projeto: Tasks API
 
-Projeto base para estudos de Git e organização de repositórios Full Stack.
-
-
-
-\## Estrutura
-
-\- backend/  → código do backend
-
-\- frontend/ → código do frontend
-
-\- docs/     → documentação técnica
-
-
-
-\## Objetivo
-
-Praticar versionamento, organização e fluxo de trabalho profissional com Git.
-
-
-
-\## Tecnologias
-
-\- Git
-
-\- GitHub
-
-
-
+- FastAPI
+- CRUD de tarefas
+- Rotas REST
+- Validação de dados
+- Status HTTP
+- Testes via Swagger
