@@ -1,8 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from typing import List
 from app.models import Task
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Tasks API")
+
+# CORS (necessário pro frontend)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 tasks: List[Task] = []
 
@@ -19,6 +28,7 @@ def list_tasks():
 def update_task(task_id: int, task: Task):
     if task_id >= len(tasks):
         raise HTTPException(status_code=404, detail="Task not found")
+
     tasks[task_id] = task
     return task
 
@@ -26,4 +36,5 @@ def update_task(task_id: int, task: Task):
 def delete_task(task_id: int):
     if task_id >= len(tasks):
         raise HTTPException(status_code=404, detail="Task not found")
+
     tasks.pop(task_id)
