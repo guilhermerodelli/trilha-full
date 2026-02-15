@@ -5,27 +5,54 @@ function App() {
   const [tasks, setTasks] = useState([])
   const [title, setTitle] = useState('')
 
-  useEffect(() => {
-    api.get('/tasks')
-      .then(response => setTasks(response.data))
-      .catch(err => console.error(err))
-  }, [])
 
-  function addTask() {
-    if (!title) return
-
-    api.post('/tasks', { title })
-      .then(response => {
-        setTasks([...tasks, response.data])
-        setTitle('')
-      })
+  const fetchTasks = async () => {
+    try {
+      const response = await api.get('/tasks/')
+      setTasks(response.data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  function removeTask(index) {
-    api.delete(`/tasks/${index}`)
-      .then(() => {
-        setTasks(tasks.filter((_, i) => i !== index))
+  useEffect(() => {
+    fetchTasks()
+  }, [])
+
+  
+  const addTask = async () => {
+    if (!title) return
+
+    try {
+      await api.post('/tasks/', { title })
+      setTitle('')
+      fetchTasks()
+    } catch (error) {
+      console.error("Erro ao criar:", error.response?.data || error)
+    }
+  }
+
+  
+  const removeTask = async (id) => {
+    try {
+      await api.delete(`/tasks/${id}`)
+      fetchTasks()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  
+  const toggleTask = async (task) => {
+    try {
+      await api.put(`/tasks/${task.id}`, {
+        title: task.title,
+        completed: !task.completed
       })
+      fetchTasks()
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -41,10 +68,27 @@ function App() {
       <button onClick={addTask}>Adicionar</button>
 
       <ul>
-        {tasks.map((task, index) => (
-          <li key={index}>
-            {task.title}
-            <button onClick={() => removeTask(index)}> ❌</button>
+        {tasks.map((task) => (
+          <li key={task.id}>
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => toggleTask(task)}
+            />
+            <span
+              style={{
+                textDecoration: task.completed ? 'line-through' : 'none',
+                marginLeft: 8
+              }}
+            >
+              {task.title}
+            </span>
+            <button
+              onClick={() => removeTask(task.id)}
+              style={{ marginLeft: 10 }}
+            >
+              ❌
+            </button>
           </li>
         ))}
       </ul>

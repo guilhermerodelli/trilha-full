@@ -1,5 +1,9 @@
-.venv/
-__pycache__/
-node_modules/
-.env
+# Banco SQLite
+tasks-api/tasks.db
 
+# Node
+frontend/node_modules/
+
+# Python
+__pycache__/
+*.pyc

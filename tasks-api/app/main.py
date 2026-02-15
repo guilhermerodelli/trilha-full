@@ -1,40 +1,21 @@
-from fastapi import FastAPI, HTTPException
-from typing import List
-from app.models import Task
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.database import engine, Base
+from app.routers import tasks
 
-app = FastAPI(title="Tasks API")
+app = FastAPI()
 
-# CORS (necessário pro frontend)
+# 🔥 CONFIGURAÇÃO CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-tasks: List[Task] = []
+# cria tabelas
+Base.metadata.create_all(bind=engine)
 
-@app.post("/tasks", status_code=201)
-def create_task(task: Task):
-    tasks.append(task)
-    return task
-
-@app.get("/tasks", response_model=List[Task])
-def list_tasks():
-    return tasks
-
-@app.put("/tasks/{task_id}")
-def update_task(task_id: int, task: Task):
-    if task_id >= len(tasks):
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    tasks[task_id] = task
-    return task
-
-@app.delete("/tasks/{task_id}", status_code=204)
-def delete_task(task_id: int):
-    if task_id >= len(tasks):
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    tasks.pop(task_id)
+# inclui rotas
+app.include_router(tasks.router)
