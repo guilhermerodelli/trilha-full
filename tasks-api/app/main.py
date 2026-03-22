@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from app.database import engine, Base
-from app.routers import tasks
+from app.routers.tasks import router as tasks_router
+from app.routers.auth import router as auth_router
+
 
 app = FastAPI()
 
-# 🔥 CONFIGURAÇÃO CORS
+# 🔥 CORS (liberar acesso do frontend)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -14,8 +17,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# cria tabelas
+# 🔥 Criar tabelas no banco
 Base.metadata.create_all(bind=engine)
 
-# inclui rotas
-app.include_router(tasks.router)
+# 🔥 Rotas
+
+
+app.include_router(tasks_router, prefix="/tasks", tags=["Tasks"])
+app.include_router(auth_router, tags=["Auth"])
